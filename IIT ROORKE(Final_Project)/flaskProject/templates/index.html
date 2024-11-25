@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot with Sentiment Analysis</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Chatbot with Sentiment Analysis</h1>
+    <div id="chat-container">
+        <div id="chat-window"></div>
+        <textarea id="user-input" placeholder="Type your message..."></textarea>
+        <button id="send-btn">Send</button>
+    </div>
+    <script>
+        const sendBtn = document.getElementById("send-btn");
+        sendBtn.addEventListener("click", () => {
+            const userInput = document.getElementById("user-input").value;
+            fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `message=${userInput}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const chatWindow = document.getElementById("chat-window");
+                chatWindow.innerHTML += `<p>User: ${userInput}</p>`;
+                chatWindow.innerHTML += `<p>Bot: ${data.response}</p>`;
+                document.getElementById("user-input").value = "";
+            });
+        });
+    </script>
+</body>
+</html>
